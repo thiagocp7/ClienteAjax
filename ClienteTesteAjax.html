@@ -1,0 +1,76 @@
+<html>
+    <header>
+        <title></title>
+        <script src="ClientAjax.js"></script>
+        <script>
+            function MacaraCep(objeto)
+            {
+
+                var campo = eval(objeto);
+
+                var CodCar = event.keyCode;
+                if (CodCar < 48 || CodCar > 57) {
+                    campo.focus();
+                    event.returnValue = false;
+                }
+
+                separador = '-';
+                conjunto1 = 5;
+
+                if (campo.value.length == conjunto1) {
+                    campo.value = campo.value + separador;
+                }
+
+
+            }
+        </script>
+    </header>
+    <body>
+        <form id="FormCep">
+            <select id="ddlListaTipoArq">
+                <option value="json">JSON</option>
+                <option value="xml">XML</option>
+            </select>
+            <input type="text" id="txtCEP" maxlength="9" onkeypress="MacaraCep(this)" />
+            <input type="button" value="REQUEST AJAX [POST]" onclick="return ExecutaRequestPost()" />
+        </form>
+        
+    </body>
+    <script>
+        function ExecutaRequestPost() 
+        {
+
+            var TipoDoc = document.forms["FormCep"].ddlListaTipoArq.options[document.forms["FormCep"].ddlListaTipoArq.selectedIndex].value;
+            var Cep = new String(document.forms["FormCep"].txtCEP.value).replace('-','');
+            var EndPoint = "https://viacep.com.br/ws/" + Cep + "/" + TipoDoc + "/";
+            var ReqAssincrona = true;
+
+            try {
+
+                RequestGetAjax(EndPoint, ImprimeResultado, ReqAssincrona);
+
+            } catch (error) {
+                
+                var PegaErro = error;
+
+            }
+            
+            
+        }
+
+        function ImprimeResultado(Documento, DataType)
+        {
+
+            switch(DataType)
+            {
+                case "JSON":
+                    document.write(Documento);
+                break
+                case "XML":
+                    var DocumentXml = Documento;
+                break
+            }
+
+        }
+    </script>
+</html>
